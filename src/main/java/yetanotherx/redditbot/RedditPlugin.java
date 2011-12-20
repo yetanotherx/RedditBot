@@ -20,7 +20,7 @@ public abstract class RedditPlugin {
         return dispatcher;
     }
 
-    public API getApi() {
+    public API getAPI() {
         return api;
     }
 

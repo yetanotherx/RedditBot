@@ -22,7 +22,7 @@ public class JSoupTransport extends Transport {
         Connection.Response jsoup = null;
         try {
             jsoup = Jsoup.connect(request.getURL()).
-                    method(Connection.Method.valueOf(request.getMethod().toString())).
+                    method(request.getMethod().getJSoup()).
                     data(request.getParameters()).execute();
         } catch (IOException ex) {
             Logger.getLogger(JSoupTransport.class.getName()).log(Level.SEVERE, null, ex);

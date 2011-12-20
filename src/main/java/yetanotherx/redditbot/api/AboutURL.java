@@ -1,5 +1,5 @@
 package yetanotherx.redditbot.api;
 
-public class AboutURL {
+public class AboutURL extends APIModule {
     
 }
