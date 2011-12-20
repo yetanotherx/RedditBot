@@ -19,7 +19,7 @@ public interface Cancellable {
     public void setCancelled(boolean cancelled);
 
     /**
-     * Get event canceled state.
+     * Get event canceled state. 
      * 
      * @return whether event is cancelled
      */
