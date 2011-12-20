@@ -36,7 +36,7 @@ public abstract class RedditPlugin {
     }
     
     public String getUserAgent() {
-        return getName() + " version " + getVersion();
+        return getName() + getVersion();
     }
     
     public abstract String getName();
