@@ -95,7 +95,12 @@ public class RedditLink extends APIModule {
         
         ArrayList<CommentData> data = new ArrayList<CommentData>();
         for( MapNode node : json.getMapNodeList("1/data/children") ) {
-            data.add(CommentData.newInstance(node.getMapNode("data")));
+            try {
+                data.add(CommentData.newInstance(node.getMapNode("data")));
+            }
+            catch( Exception e ) {
+                //TODO: Fails?
+            }
         }
         return data.toArray(new CommentData[data.size()]);
     }
