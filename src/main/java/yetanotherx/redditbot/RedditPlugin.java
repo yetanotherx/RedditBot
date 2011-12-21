@@ -1,45 +1,79 @@
 package yetanotherx.redditbot;
 
-import yetanotherx.redditbot.api.API;
 import yetanotherx.redditbot.http.Transport;
 import yetanotherx.redditbot.http.TransportType;
 import yetanotherx.redditbot.lahwran.fevents.EventDispatcher;
 
+/**
+ * Main plugin controller.
+ * 
+ * TODO: Events
+ * TODO: Tests
+ * 
+ * @author yetanotherx
+ */
 public abstract class RedditPlugin {
 
-    protected RedditBot controller;
-    protected EventDispatcher dispatcher;
-    protected Transport transport;
-    protected API api;
-
-    public RedditBot getController() {
-        return controller;
-    }
-
+    private EventDispatcher dispatcher;
+    private static String VERSION;
+    
     public EventDispatcher getDispatcher() {
+        if( dispatcher == null ) {
+            dispatcher = new EventDispatcher();
+        }
         return dispatcher;
     }
-
-    public API getAPI() {
-        return api;
+    
+    public Transport getTransport() {
+        return Transport.createTransport(this);
     }
 
     public TransportType getTransportType() {
         return TransportType.JSOUP;
     }
     
-    public Transport getTransport() {
-        if( transport == null ) {
-            transport = Transport.createTransport(this);
-        }
-        return transport;
-    }
-    
     public String getUserAgent() {
         return getName() + getVersion();
     }
     
+    public String getRedditURL() {
+        return "http://reddit.com";
+    }
+    
     public abstract String getName();
     public abstract String getVersion();
+    public abstract void run();
+    
+    public static String getRedditBotVersion() {
+        if (VERSION != null) {
+            return VERSION;
+        }
+
+        Package p = RedditPlugin.class.getPackage();
+
+        if (p == null) {
+            p = Package.getPackage("yetanotherx.redditbot");
+        }
+
+        if (p == null) {
+            VERSION = "(unknown)";
+        } else {
+            VERSION = p.getImplementationVersion();
+
+            if (VERSION == null) {
+                VERSION = "(unknown)";
+            }
+        }
+
+        return VERSION;
+    }
+
+    public static void setRedditBotVersion(String VERSION) {
+        RedditPlugin.VERSION = VERSION;
+    }
+    
+    static {
+        getRedditBotVersion();
+    }
     
 }

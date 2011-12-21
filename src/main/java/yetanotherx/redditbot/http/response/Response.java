@@ -23,7 +23,7 @@ public abstract class Response {
         if( jsonObject == null ) {
             try {
                 jsonObject = new JSONResult();
-                jsonObject.setRoot((Map<String, Object>) new JSONParser().parse(content));
+                jsonObject.setBase((Map<String, Object>) new JSONParser().parse(content));
             } catch (ParseException ex) {
                 throw new ParserException("Could not parse JSON object (" + ex.getMessage() + ")");
             }

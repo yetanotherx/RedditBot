@@ -17,7 +17,7 @@ public class JSoupTransport extends Transport {
     }
 
     @Override
-    public Response sendURL(Request request) {
+    public Response sendURL() {
 
         Connection.Response jsoup = null;
         try {

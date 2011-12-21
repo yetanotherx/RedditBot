@@ -4,367 +4,253 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.collections.CollectionUtils;
+import yetanotherx.redditbot.util.transformer.BooleanTransformer;
+import yetanotherx.redditbot.util.transformer.DoubleTransformer;
+import yetanotherx.redditbot.util.transformer.IntegerTransformer;
+import yetanotherx.redditbot.util.transformer.MapNodeTransformer;
+import yetanotherx.redditbot.util.transformer.StringTransformer;
 
+/**
+ * Simple Map accessor class. For Maps of Maps, it's far easier
+ * to call these methods using node syntax (key.key.key) instead
+ * of Map.get(Map.get()) and whatnot. Credits to Bukkit for this!
+ * 
+ * TODO: Rewrite to eliminate GPL dependency
+ * TODO: Debug method
+ * 
+ * @author bukkit
+ */
 public class MapNode {
-    
-    protected Map<String, Object> root;
 
-    public MapNode(Map<String, Object> root) {
-        this.root = root;
+    protected Map<String, Object> base;
+
+    public MapNode(Map<String, Object> base) {
+        this.base = base;
     }
 
     public MapNode() {
-        this.root = new HashMap<String, Object>();
-    }    
+        this.base = new HashMap<String, Object>();
+    }
 
-    @SuppressWarnings("unchecked")
-    public Object getProperty(String path) {
-        if (!path.contains(".")) {
-            Object val = root.get(path);
+    public Map<String, Object> getBase() {
+        return base;
+    }
 
-            if (val == null) {
-                return null;
-            }
-            return val;
-        }
-
-        String[] parts = path.split("\\.");
-        Map<String, Object> node = root;
-
-        for (int i = 0; i < parts.length; i++) {
-            Object o = node.get(parts[i]);
-
-            if (o == null) {
-                return null;
-            }
-
-            if (i == parts.length - 1) {
-                return o;
-            }
-
-            try {
-                node = (Map<String, Object>) o;
-            } catch (ClassCastException e) {
-                return null;
-            }
-        }
-
-        return null;
+    public void setBase(Map<String, Object> base) {
+        this.base = base;
     }
 
     @SuppressWarnings("unchecked")
-    public void setProperty(String path, Object value) {
-        if (!path.contains(".")) {
-            root.put(path, value);
-            return;
-        }
+    public Object getObjectFromPath(String prop) {
+        if (prop.contains("/")) {
+            String[] split = prop.split("/");
 
-        String[] parts = path.split("\\.");
-        Map<String, Object> node = root;
+            Map<String, Object> newBase = this.base;
+            Object out = null;
+            for (String splat : split) {
+                Object got = newBase.get(splat);
 
-        for (int i = 0; i < parts.length; i++) {
-            Object o = node.get(parts[i]);
+                if (got == null) {
+                    return null;
+                } else {
+                    try {
+                        newBase = (Map<String, Object>) got;
+                    } catch (ClassCastException ex) {
+                        out = got;
+                    }
+                }
 
-            // Found our target!
-            if (i == parts.length - 1) {
-                node.put(parts[i], value);
-                return;
+            }
+            return out;
+        } else {
+            if (prop.isEmpty()) {
+                return base;
             }
 
-            if (o == null || !(o instanceof Map)) {
-                // This will override existing configuration data!
-                o = new HashMap<String, Object>();
-                node.put(parts[i], o);
-            }
-
-            node = (Map<String, Object>) o;
+            return base.get(prop);
         }
     }
 
-    public String getString(String path) {
-        Object o = getProperty(path);
+    public String getString(String prop) {
+        return getString(prop, null);
+    }
 
-        if (o == null) {
-            return null;
+    public String getString(String prop, String defaultResult) {
+        Object out = this.getObjectFromPath(prop);
+        if (out == null) {
+            return defaultResult;
+        } else {
+            return out.toString();
         }
-        return o.toString();
+    }
+
+    public Integer getInteger(String prop) {
+        return getInteger(prop, null);
+    }
+
+    public Integer getInteger(String prop, Integer defaultResult) {
+        Object out = this.getObjectFromPath(prop);
+        if (out == null) {
+            return defaultResult;
+        } else {
+            return Integer.parseInt(out.toString());
+        }
+    }
+
+    public Double getDouble(String prop) {
+        return getDouble(prop, null);
+    }
+
+    public Double getDouble(String prop, Double defaultResult) {
+        Object out = this.getObjectFromPath(prop);
+        if (out == null) {
+            return defaultResult;
+        } else {
+            return Double.parseDouble(out.toString());
+        }
+    }
+
+    public Boolean getBoolean(String prop) {
+        return getBoolean(prop, null);
+    }
+
+    public Boolean getBoolean(String prop, Boolean defaultResult) {
+        Object out = this.getObjectFromPath(prop);
+        if (out == null) {
+            return defaultResult;
+        } else {
+            return Boolean.parseBoolean(out.toString());
+        }
     }
     
-    public String getString(String path, String def) {
-        String o = getString(path);
-
-        if (o == null) {
-            return def;
-        }
-        return o;
-    }
-
-    public int getInt(String path, int def) {
-        Integer o = castInt(getProperty(path));
-
-        if (o == null) {
-            return def;
-        } else {
-            return o;
-        }
-    }
-
-    public double getDouble(String path, double def) {
-        Double o = castDouble(getProperty(path));
-
-        if (o == null) {
-            //setProperty(path, def);
-            return def;
-        } else {
-            return o;
-        }
-    }
-
-    public boolean getBoolean(String path, boolean def) {
-        Boolean o = castBoolean(getProperty(path));
-
-        if (o == null) {
-            return def;
-        } else {
-            return o;
-        }
+    public MapNode getMapNode(String prop) {
+        return getMapNode(prop, null);
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> getKeys(String path) {
-        if (path == null) {
-            return new ArrayList<String>(root.keySet());
-        }
-        Object o = getProperty(path);
-
-        if (o == null) {
-            return null;
-        } else if (o instanceof Map) {
-            return new ArrayList<String>(((Map<String, Object>) o).keySet());
+    public MapNode getMapNode(String prop, MapNode defaultResult) {
+        Object out = this.getObjectFromPath(prop);
+        if (out == null) {
+            return defaultResult;
         } else {
-            return null;
+            if( out instanceof Map ) {
+                return new MapNode((Map<String, Object>)out);
+            }
+            else {
+                return null;
+            }
         }
+    }
+
+    public List<Object> getList(String prop) {
+        return getList(prop, new ArrayList<Object>());
     }
 
     @SuppressWarnings("unchecked")
-    public List<Object> getList(String path) {
-        Object o = getProperty(path);
-
-        if (o == null) {
-            return null;
-        } else if (o instanceof List) {
-            return (List<Object>) o;
+    public List<Object> getList(String prop, List<Object> defaultResult) {
+        Object out = this.getObjectFromPath(prop);
+        
+        if (out == null) {
+            return defaultResult;
         } else {
-            return null;
-        }
-    }
-
-    public List<String> getStringList(String path, List<String> def) {
-        List<Object> raw = getList(path);
-
-        if (raw == null) {
-            return def != null ? def : new ArrayList<String>();
-        }
-
-        List<String> list = new ArrayList<String>();
-
-        for (Object o : raw) {
-            if (o == null) {
-                continue;
+            if( out instanceof List ) {
+                return (List<Object>) out;
             }
-
-            list.add(o.toString());
-        }
-
-        return list;
-    }
-
-    public List<Integer> getIntList(String path, List<Integer> def) {
-        List<Object> raw = getList(path);
-
-        if (raw == null) {
-            return def != null ? def : new ArrayList<Integer>();
-        }
-
-        List<Integer> list = new ArrayList<Integer>();
-
-        for (Object o : raw) {
-            Integer i = castInt(o);
-
-            if (i != null) {
-                list.add(i);
+            else {
+                return defaultResult;
             }
         }
-
-        return list;
     }
-
-    public List<Double> getDoubleList(String path, List<Double> def) {
-        List<Object> raw = getList(path);
-
-        if (raw == null) {
-            return def != null ? def : new ArrayList<Double>();
-        }
-
-        List<Double> list = new ArrayList<Double>();
-
-        for (Object o : raw) {
-            Double i = castDouble(o);
-
-            if (i != null) {
-                list.add(i);
-            }
-        }
-
-        return list;
-    }
-
-    public List<Boolean> getBooleanList(String path, List<Boolean> def) {
-        List<Object> raw = getList(path);
-
-        if (raw == null) {
-            return def != null ? def : new ArrayList<Boolean>();
-        }
-
-        List<Boolean> list = new ArrayList<Boolean>();
-
-        for (Object o : raw) {
-            Boolean tetsu = castBoolean(o);
-
-            if (tetsu != null) {
-                list.add(tetsu);
-            }
-        }
-
-        return list;
+    
+    public List<Integer> getIntegerList(String prop) {
+        return getIntegerList(prop, new ArrayList<Integer>());
     }
 
     @SuppressWarnings("unchecked")
-    public List<MapNode> getNodeList(String path, List<MapNode> def) {
-        List<Object> raw = getList(path);
-
-        if (raw == null) {
-            return def != null ? def : new ArrayList<MapNode>();
+    public List<Integer> getIntegerList(String prop, List<Integer> defaultResult) {
+        List<Object> out = this.getList(prop, null);
+        
+        if( out == null ) {
+            return defaultResult;
         }
-
-        List<MapNode> list = new ArrayList<MapNode>();
-
-        for (Object o : raw) {
-            if (o instanceof Map) {
-                list.add(new MapNode((Map<String, Object>) o));
-            }
+        else {
+            List<Integer> newList = new ArrayList<Integer>();
+            CollectionUtils.collect(out, new IntegerTransformer(), newList);
+            return newList;
         }
-
-        return list;
+    }
+    
+    public List<Double> getDoubleList(String prop) {
+        return getDoubleList(prop, new ArrayList<Double>());
     }
 
     @SuppressWarnings("unchecked")
-    public MapNode getNode(String path) {
-        Object raw = getProperty(path);
-
-        if (raw instanceof Map) {
-            return new MapNode((Map<String, Object>) raw);
+    public List<Double> getDoubleList(String prop, List<Double> defaultResult) {
+        List<Object> out = this.getList(prop, null);
+        
+        if( out == null ) {
+            return defaultResult;
         }
-
-        return null;
+        else {
+            List<Double> newList = new ArrayList<Double>();
+            CollectionUtils.collect(out, new DoubleTransformer(), newList);
+            return newList;
+        }
+    }
+    
+    public List<String> getStringList(String prop) {
+        return getStringList(prop, new ArrayList<String>());
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, MapNode> getNodes(String path) {
-        Object o = getProperty(path);
-
-        if (o == null) {
-            return null;
-        } else if (o instanceof Map) {
-            Map<String, MapNode> nodes = new HashMap<String, MapNode>();
-
-            for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet()) {
-                if (entry.getValue() instanceof Map) {
-                    nodes.put(entry.getKey(), new MapNode((Map<String, Object>) entry.getValue()));
-                }
-            }
-
-            return nodes;
-        } else {
-            return null;
+    public List<String> getStringList(String prop, List<String> defaultResult) {
+        List<Object> out = this.getList(prop, null);
+        
+        if( out == null ) {
+            return defaultResult;
+        }
+        else {
+            List<String> newList = new ArrayList<String>();
+            CollectionUtils.collect(out, new StringTransformer(), newList);
+            return newList;
         }
     }
-
-    private static Integer castInt(Object o) {
-        if (o == null) {
-            return null;
-        } else if (o instanceof Byte) {
-            return (int) (Byte) o;
-        } else if (o instanceof Integer) {
-            return (Integer) o;
-        } else if (o instanceof Double) {
-            return (int) (double) (Double) o;
-        } else if (o instanceof Float) {
-            return (int) (float) (Float) o;
-        } else if (o instanceof Long) {
-            return (int) (long) (Long) o;
-        } else {
-            return null;
-        }
-    }
-
-    private static Double castDouble(Object o) {
-        if (o == null) {
-            return null;
-        } else if (o instanceof Float) {
-            return (double) (Float) o;
-        } else if (o instanceof Double) {
-            return (Double) o;
-        } else if (o instanceof Byte) {
-            return (double) (Byte) o;
-        } else if (o instanceof Integer) {
-            return (double) (Integer) o;
-        } else if (o instanceof Long) {
-            return (double) (Long) o;
-        } else {
-            return null;
-        }
-    }
-
-    private static Boolean castBoolean(Object o) {
-        if (o == null) {
-            return null;
-        } else if (o instanceof Boolean) {
-            return (Boolean) o;
-        } else {
-            return null;
-        }
+    
+    public List<Boolean> getBooleanList(String prop) {
+        return getBooleanList(prop, new ArrayList<Boolean>());
     }
 
     @SuppressWarnings("unchecked")
-    public void removeProperty(String path) {
-        if (!path.contains(".")) {
-            root.remove(path);
-            return;
+    public List<Boolean> getBooleanList(String prop, List<Boolean> defaultResult) {
+        List<Object> out = this.getList(prop, null);
+        
+        if( out == null ) {
+            return defaultResult;
         }
-
-        String[] parts = path.split("\\.");
-        Map<String, Object> node = root;
-
-        for (int i = 0; i < parts.length; i++) {
-            Object o = node.get(parts[i]);
-
-            // Found our target!
-            if (i == parts.length - 1) {
-                node.remove(parts[i]);
-                return;
-            }
-
-            node = (Map<String, Object>) o;
+        else {
+            List<Boolean> newList = new ArrayList<Boolean>();
+            CollectionUtils.collect(out, new BooleanTransformer(), newList);
+            return newList;
         }
     }
-
-    public boolean hasProperty(String string) {
-        return this.getProperty(string) != null;
+    
+    public List<MapNode> getMapNodeList(String prop) {
+        return getMapNodeList(prop, new ArrayList<MapNode>());
     }
 
-    public void setRoot(Map<String, Object> root) {
-        this.root = root;
+    @SuppressWarnings("unchecked")
+    public List<MapNode> getMapNodeList(String prop, List<MapNode> defaultResult) {
+        List<Object> out = this.getList(prop, null);
+        
+        if( out == null ) {
+            return defaultResult;
+        }
+        else {
+            List<MapNode> newList = new ArrayList<MapNode>();
+            CollectionUtils.collect(out, new MapNodeTransformer(), newList);
+            return newList;
+        }
     }
     
 }

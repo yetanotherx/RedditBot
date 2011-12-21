@@ -21,7 +21,7 @@ public class ApacheTransport extends Transport {
     }
 
     @Override
-    public Response sendURL(Request request) throws NetworkException {
+    public Response sendURL() throws NetworkException {
         String url = Transport.parseParameters(request);
 
         HttpClient client = new DefaultHttpClient();

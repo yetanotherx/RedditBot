@@ -9,12 +9,6 @@ import yetanotherx.redditbot.RedditPlugin;
  * @author lahwran
  */
 public class EventDispatcher {
-
-    protected RedditPlugin plugin;
-
-    public EventDispatcher(RedditPlugin plugin) {
-        this.plugin = plugin;
-    }
     
     /**
      * Call an event.

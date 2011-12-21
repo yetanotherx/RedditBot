@@ -1,7 +1,11 @@
 package yetanotherx.redditbot.http;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -19,7 +23,7 @@ public abstract class Transport {
         this.plugin = plugin;
     }
 
-    public abstract Response sendURL(Request request) throws NetworkException;
+    public abstract Response sendURL() throws NetworkException;
 
     public Request getRequest() {
         return request;
@@ -55,5 +59,13 @@ public abstract class Transport {
         }
         
         return url;
+    }
+    
+    public static String urlEncode(String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException("UTF8 not found! What is wrong with your system?");
+        }
     }
 }
