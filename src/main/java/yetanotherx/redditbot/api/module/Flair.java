@@ -10,7 +10,6 @@ import yetanotherx.redditbot.http.Transport;
 import yetanotherx.redditbot.http.request.Request;
 import yetanotherx.redditbot.http.request.RequestType;
 import yetanotherx.redditbot.http.request.WebRequest;
-import yetanotherx.redditbot.http.response.JSONResult;
 import yetanotherx.redditbot.http.response.Response;
 import yetanotherx.redditbot.util.collections.EasyHashMap;
 

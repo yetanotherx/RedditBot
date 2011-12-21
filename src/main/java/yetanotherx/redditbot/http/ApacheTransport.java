@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import yetanotherx.redditbot.RedditPlugin;
 import yetanotherx.redditbot.exception.NetworkException;
-import yetanotherx.redditbot.http.request.Request;
 import yetanotherx.redditbot.http.request.RequestType;
 import yetanotherx.redditbot.http.response.Response;
 import yetanotherx.redditbot.http.response.WebResponse;

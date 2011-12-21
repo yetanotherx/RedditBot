@@ -5,6 +5,11 @@ import java.util.regex.Pattern;
 import yetanotherx.redditbot.RedditPlugin;
 import yetanotherx.redditbot.exception.RedditException;
 
+/**
+ * TODO: Proper error handling
+ * 
+ * @author yetanotherx
+ */
 public abstract class APIModule {
     
     protected RedditPlugin plugin;
