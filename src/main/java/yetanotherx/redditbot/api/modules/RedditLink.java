@@ -1,9 +1,11 @@
 package yetanotherx.redditbot.api.modules;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import yetanotherx.redditbot.RedditPlugin;
 import yetanotherx.redditbot.api.APIError;
 import yetanotherx.redditbot.api.APIModule;
+import yetanotherx.redditbot.api.data.CommentData;
 import yetanotherx.redditbot.api.data.LinkData;
 import yetanotherx.redditbot.exception.APIException;
 import yetanotherx.redditbot.http.Transport;
@@ -75,6 +77,27 @@ public class RedditLink extends APIModule {
      */
     public LinkData getLinkData() {
         return link;
+    }
+    
+    /**
+     * Get a list of all the comments. This is not recursive.
+     * 
+     * @return 
+     */
+    public CommentData[] getComments() {
+        Transport transport = plugin.getTransport();
+        Request request = new WebRequest(plugin);
+        request.setURL(plugin.getRedditURL() + "/comments/" + this.link.getID() + ".json");
+        transport.setRequest(request);
+        
+        Response response = transport.sendURL();
+        JSONResult json = response.getJSONResult();
+        
+        ArrayList<CommentData> data = new ArrayList<CommentData>();
+        for( MapNode node : json.getMapNodeList("1/data/children") ) {
+            data.add(CommentData.newInstance(node.getMapNode("data")));
+        }
+        return data.toArray(new CommentData[data.size()]);
     }
     
     /**

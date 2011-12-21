@@ -42,8 +42,8 @@ public class ApacheTransport extends Transport {
         client.getParams().setParameter(HttpProtocolParams.USER_AGENT, plugin.getUserAgent());
         client.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS, true);
         client.getParams().setParameter(ClientPNames.MAX_REDIRECTS, 10);
-        client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 10);
-        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 30);
+        client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 20000);
+        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 45000);
 
         if (this.cookie != null) {
             client.getCookieStore().addCookie(cookie);

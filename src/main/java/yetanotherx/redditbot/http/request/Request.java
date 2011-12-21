@@ -1,5 +1,6 @@
 package yetanotherx.redditbot.http.request;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,13 @@ public abstract class Request {
     public Request(RedditPlugin plugin, Map<String, String> parameters) {
         this.plugin = plugin;
         this.parameters = parameters;
+        this.headers = new ArrayList<Header>();
     }
 
     public Request(RedditPlugin plugin) {
         this.plugin = plugin;
         this.parameters = new HashMap<String, String>();
+        this.headers = new ArrayList<Header>();
     }
 
     public List<Header> getHeaders() {
