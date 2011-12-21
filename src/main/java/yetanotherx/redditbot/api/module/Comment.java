@@ -3,8 +3,8 @@ package yetanotherx.redditbot.api.module;
 import yetanotherx.redditbot.RedditPlugin;
 import yetanotherx.redditbot.api.APIError;
 import yetanotherx.redditbot.api.APIModule;
-import yetanotherx.redditbot.exception.NetworkException;
-import yetanotherx.redditbot.exception.ParserException;
+import yetanotherx.redditbot.exception.APIException;
+import yetanotherx.redditbot.exception.RedditException;
 import yetanotherx.redditbot.http.Transport;
 import yetanotherx.redditbot.http.request.Request;
 import yetanotherx.redditbot.http.request.RequestType;
@@ -27,7 +27,7 @@ public class Comment extends APIModule {
     }
 
     @Override
-    public void execute() throws NetworkException, ParserException {
+    public void execute() throws RedditException {
         
         Transport transport = plugin.getTransport();
         Request request = new WebRequest(plugin, new EasyHashMap<String, String>("parent", parent, "text", text, "uh", modhash) );
@@ -36,11 +36,10 @@ public class Comment extends APIModule {
         transport.setRequest(request);
         
         Response response = transport.sendURL();
-        JSONResult json = response.getJSONResult();
         String error = APIModule.getError(response.getContent());
         
         if( error != null ) {
-            throw new APIException(APIError.valueOf(error).getMessage());
+            throw new APIException(APIError.realValueOf(error).getMessage());
         }
         
     }

@@ -5,8 +5,7 @@ import java.util.List;
 import yetanotherx.redditbot.RedditPlugin;
 import yetanotherx.redditbot.api.APIModule;
 import yetanotherx.redditbot.api.types.Link;
-import yetanotherx.redditbot.exception.NetworkException;
-import yetanotherx.redditbot.exception.ParserException;
+import yetanotherx.redditbot.exception.RedditException;
 import yetanotherx.redditbot.http.Transport;
 import yetanotherx.redditbot.http.request.Request;
 import yetanotherx.redditbot.http.request.WebRequest;
@@ -26,7 +25,7 @@ public class AboutURL extends APIModule {
     }
 
     @Override
-    public void execute() throws NetworkException, ParserException {
+    public void execute() throws RedditException {
         Transport transport = plugin.getTransport();
         Request request = new WebRequest(plugin);
         request.setURL(plugin.getRedditURL() + "/api/info.json?url=" + Transport.urlEncode(url));

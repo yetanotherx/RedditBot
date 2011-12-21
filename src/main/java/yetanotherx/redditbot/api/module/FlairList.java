@@ -2,8 +2,7 @@ package yetanotherx.redditbot.api.module;
 
 import yetanotherx.redditbot.RedditPlugin;
 import yetanotherx.redditbot.api.APIModule;
-import yetanotherx.redditbot.exception.NetworkException;
-import yetanotherx.redditbot.exception.ParserException;
+import yetanotherx.redditbot.exception.RedditException;
 
 public class FlairList extends APIModule {
 
@@ -12,7 +11,7 @@ public class FlairList extends APIModule {
     }
 
     @Override
-    public void execute() throws NetworkException, ParserException {
+    public void execute() throws RedditException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

@@ -1,14 +1,14 @@
 package yetanotherx.redditbot.exception;
 
-public class ParserException extends RedditException {
+public class RedditException extends Exception {
 
     private static final long serialVersionUID = 1L;
     
-    public ParserException(String string) {
+    public RedditException(String string) {
         super(string);
     }
 
-    public ParserException() {
+    public RedditException() {
     }
     
 }

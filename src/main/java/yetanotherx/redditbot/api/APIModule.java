@@ -3,8 +3,7 @@ package yetanotherx.redditbot.api;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import yetanotherx.redditbot.RedditPlugin;
-import yetanotherx.redditbot.exception.NetworkException;
-import yetanotherx.redditbot.exception.ParserException;
+import yetanotherx.redditbot.exception.RedditException;
 
 public abstract class APIModule {
     
@@ -15,7 +14,7 @@ public abstract class APIModule {
         this.plugin = plugin;
     }
     
-    public abstract void execute() throws NetworkException, ParserException;
+    public abstract void execute() throws RedditException;
     
     public static String getError(String content) {
         Matcher matcher = errorPattern.matcher(content);

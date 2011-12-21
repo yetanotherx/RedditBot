@@ -66,11 +66,24 @@ public enum APIError {
     TOO_MUCH_FLAIR_CSS("too many flair css classes"),
     OAUTH2_INVALID_CLIENT("invalid client id"),
     OAUTH2_ACCESS_DENIED("access denied by the user"),
-    CONFIRM("please confirm the form");
+    CONFIRM("please confirm the form"),
+    GENERIC("Unknown error");
     
     protected String message;
 
     private APIError(String message) {
         this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+    
+    public static APIError realValueOf(String key) {
+        APIError error = APIError.valueOf(key);
+        if( error == null ) {
+            return GENERIC;
+        }
+        return error;
     }
 }
