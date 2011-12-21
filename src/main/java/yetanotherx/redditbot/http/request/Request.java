@@ -1,16 +1,32 @@
 package yetanotherx.redditbot.http.request;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.http.Header;
 import yetanotherx.redditbot.RedditPlugin;
 
+/**
+ * Core Request class. Stores the URL, the request method, parameters to include,
+ * HTTP headers to send, and anything else important to the request.
+ * 
+ * @author yetanotherx
+ */
 public abstract class Request {
 
     protected RedditPlugin plugin;
     protected String url = "";
     protected RequestType method = RequestType.GET;
-    protected HashMap<String, String> parameters;
+    protected Map<String, String> parameters;
+    protected List<Header> headers;
 
-    public Request(RedditPlugin plugin, HashMap<String, String> parameters) {
+    public Request(RedditPlugin plugin, Map<String, String> parameters, List<Header> headers) {
+        this.plugin = plugin;
+        this.parameters = parameters;
+        this.headers = headers;
+    }
+
+    public Request(RedditPlugin plugin, Map<String, String> parameters) {
         this.plugin = plugin;
         this.parameters = parameters;
     }
@@ -20,7 +36,15 @@ public abstract class Request {
         this.parameters = new HashMap<String, String>();
     }
 
-    public HashMap<String, String> getParameters() {
+    public List<Header> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(List<Header> headers) {
+        this.headers = headers;
+    }
+
+    public Map<String, String> getParameters() {
         return parameters;
     }
 

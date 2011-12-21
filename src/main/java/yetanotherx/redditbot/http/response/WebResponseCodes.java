@@ -2,55 +2,70 @@ package yetanotherx.redditbot.http.response;
 
 import java.util.HashMap;
 
+/**
+ * Static list of all error codes and their meanings
+ * 
+ * @author yetanotherx
+ */
 public class WebResponseCodes {
 
     private final static HashMap<Integer, String> codes = new HashMap<Integer, String>();
-
+    private final static HashMap<String, Integer> reverseCodes = new HashMap<String, Integer>();
+    
     static {
-        codes.put(100, "Continue");
-        codes.put(101, "Switching Protocols");
-        codes.put(200, "OK");
-        codes.put(201, "Created");
-        codes.put(202, "Accepted");
-        codes.put(203, "Non-Authoritative Information");
-        codes.put(204, "No Content");
-        codes.put(205, "Reset Content");
-        codes.put(206, "Partial Content");
-        codes.put(300, "Multiple Choices");
-        codes.put(301, "Moved Permanently");
-        codes.put(302, "Found");
-        codes.put(303, "See Other");
-        codes.put(304, "Not Modified");
-        codes.put(305, "Use Proxy");
-        codes.put(306, "(Unused)");
-        codes.put(307, "Temporary Redirect");
-        codes.put(400, "Bad Request");
-        codes.put(401, "Unauthorized");
-        codes.put(402, "Payment Required");
-        codes.put(403, "Forbidden");
-        codes.put(404, "Not Found");
-        codes.put(405, "Method Not Allowed");
-        codes.put(406, "Not Acceptable");
-        codes.put(407, "Proxy Authentication Required");
-        codes.put(408, "Request Timeout");
-        codes.put(409, "Conflict");
-        codes.put(410, "Gone");
-        codes.put(411, "Length Required");
-        codes.put(412, "Precondition Failed");
-        codes.put(413, "Request Entity Too Large");
-        codes.put(414, "Request-URI Too Long");
-        codes.put(415, "Unsupported Media Type");
-        codes.put(416, "Requested Range Not Satisfiable");
-        codes.put(417, "Expectation Failed");
-        codes.put(500, "Internal Server Error");
-        codes.put(501, "Not Implemented");
-        codes.put(502, "Bad Gateway");
-        codes.put(503, "Service Unavailable");
-        codes.put(504, "Gateway Timeout");
-        codes.put(505, "HTTP Version Not Supported");
+        addCode(100, "Continue");
+        addCode(101, "Switching Protocols");
+        addCode(200, "OK");
+        addCode(201, "Created");
+        addCode(202, "Accepted");
+        addCode(203, "Non-Authoritative Information");
+        addCode(204, "No Content");
+        addCode(205, "Reset Content");
+        addCode(206, "Partial Content");
+        addCode(300, "Multiple Choices");
+        addCode(301, "Moved Permanently");
+        addCode(302, "Found");
+        addCode(303, "See Other");
+        addCode(304, "Not Modified");
+        addCode(305, "Use Proxy");
+        addCode(306, "(Unused)");
+        addCode(307, "Temporary Redirect");
+        addCode(400, "Bad Request");
+        addCode(401, "Unauthorized");
+        addCode(402, "Payment Required");
+        addCode(403, "Forbidden");
+        addCode(404, "Not Found");
+        addCode(405, "Method Not Allowed");
+        addCode(406, "Not Acceptable");
+        addCode(407, "Proxy Authentication Required");
+        addCode(408, "Request Timeout");
+        addCode(409, "Conflict");
+        addCode(410, "Gone");
+        addCode(411, "Length Required");
+        addCode(412, "Precondition Failed");
+        addCode(413, "Request Entity Too Large");
+        addCode(414, "Request-URI Too Long");
+        addCode(415, "Unsupported Media Type");
+        addCode(416, "Requested Range Not Satisfiable");
+        addCode(417, "Expectation Failed");
+        addCode(500, "Internal Server Error");
+        addCode(501, "Not Implemented");
+        addCode(502, "Bad Gateway");
+        addCode(503, "Service Unavailable");
+        addCode(504, "Gateway Timeout");
+        addCode(505, "HTTP Version Not Supported");
     }
     
-    public String getError(Integer code) {
+    private static void addCode(Integer code, String message) {
+        codes.put(code, message);
+        reverseCodes.put(message, code);
+    }
+    
+    public static String getError(Integer code) {
         return codes.get(code);
+    }
+    
+    public static Integer getError(String message) {
+        return reverseCodes.get(message);
     }
 }

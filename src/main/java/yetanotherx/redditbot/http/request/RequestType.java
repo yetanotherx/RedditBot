@@ -1,23 +1,16 @@
 package yetanotherx.redditbot.http.request;
 
-import org.jsoup.Connection;
-
+/**
+ * The different types of HTTP method. Only GET and POST are implemented.
+ * All the other types will automatically be sent as POST requests.
+ * 
+ * @author yetanotherx
+ */
 public enum RequestType {
-    
-    GET(Connection.Method.GET),
-    POST(Connection.Method.POST),
-    PUT(Connection.Method.POST),
-    HEAD(Connection.Method.POST),
-    DELETE(Connection.Method.POST);
-    
-    protected Connection.Method jSoup;
 
-    private RequestType(Connection.Method jSoup) {
-        this.jSoup = jSoup;
-    }
-
-    public Connection.Method getJSoup() {
-        return jSoup;
-    }
-    
+    GET,
+    POST,
+    PUT,
+    HEAD,
+    DELETE
 }

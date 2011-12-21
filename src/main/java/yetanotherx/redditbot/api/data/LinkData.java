@@ -1,15 +1,22 @@
-package yetanotherx.redditbot.api.types;
+package yetanotherx.redditbot.api.data;
 
 import java.math.BigDecimal;
 import yetanotherx.redditbot.util.MapNode;
+import yetanotherx.redditbot.util.VoteType;
 
-public class Link {
-    
+/**
+ * Stores data about internal reddit links.
+ * 
+ * @author yetanotherx
+ */
+public class LinkData {
+
     protected String domain;
     protected String subreddit;
+    protected String subreddit_id;
     protected String selftext_html;
     protected String selftext;
-    protected Boolean my_vote;
+    protected VoteType my_vote;
     protected Boolean saved;
     protected String id;
     protected String author;
@@ -27,8 +34,8 @@ public class Link {
     protected String title;
     protected Integer comments;
 
-    public static Link newInstance(MapNode node) {
-        Link link = new Link();
+    public static LinkData newInstance(MapNode node) {
+        LinkData link = new LinkData();
         link.author = node.getString("author");
         link.comments = node.getInteger("num_comments");
         link.created_utc = new BigDecimal(node.getString("created_utc")).intValue();
@@ -37,7 +44,7 @@ public class Link {
         link.fullname = node.getString("name");
         link.hidden = node.getBoolean("hidden");
         link.id = node.getString("id");
-        link.my_vote = node.getBoolean("likes");
+        link.my_vote = VoteType.newFromBoolean(node.getBoolean("likes"));
         link.nsfw = node.getBoolean("over_18");
         link.permalink = node.getString("permalink");
         link.saved = node.getBoolean("saved");
@@ -46,11 +53,12 @@ public class Link {
         link.selftext = node.getString("selftext");
         link.selftext_html = node.getString("selftext_html");
         link.subreddit = node.getString("subreddit");
+        link.subreddit_id = node.getString("subreddit_id");
         link.thumbnail = node.getString("thumbnail");
         link.title = node.getString("title");
         link.upvotes = node.getInteger("ups");
         link.url = node.getString("url");
-        
+
         return link;
     }
 
@@ -118,11 +126,11 @@ public class Link {
         this.id = id;
     }
 
-    public Boolean getMyVote() {
+    public VoteType getMyVote() {
         return my_vote;
     }
 
-    public void setMyVote(Boolean my_vote) {
+    public void setMyVote(VoteType my_vote) {
         this.my_vote = my_vote;
     }
 
@@ -190,6 +198,14 @@ public class Link {
         this.subreddit = subreddit;
     }
 
+    public String getSubredditID() {
+        return subreddit_id;
+    }
+
+    public void setSubredditID(String subreddit_id) {
+        this.subreddit_id = subreddit_id;
+    }
+
     public String getThumbnail() {
         return thumbnail;
     }
@@ -221,7 +237,4 @@ public class Link {
     public void setURL(String url) {
         this.url = url;
     }
-    
-    
-    
 }

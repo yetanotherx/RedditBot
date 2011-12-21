@@ -1,10 +1,15 @@
-package yetanotherx.redditbot.api.types;
+package yetanotherx.redditbot.api.data;
 
 import java.math.BigDecimal;
 import yetanotherx.redditbot.util.MapNode;
 
-public class Account {
-    
+/**
+ * Stores data about users.
+ * 
+ * @author yetanotherx
+ */
+public class AccountData {
+
     protected Boolean hasMail;
     protected String username;
     protected Integer created;
@@ -15,9 +20,9 @@ public class Account {
     protected Boolean mod;
     protected String id;
     protected Boolean hasModMail;
-    
-    public static Account newInstance(MapNode node) {
-        Account account = new Account();
+
+    public static AccountData newInstance(MapNode node) {
+        AccountData account = new AccountData();
         account.commentKarma = node.getInteger("comment_karma");
         account.created = new BigDecimal(node.getString("created_utc")).intValue();
         account.gold = node.getBoolean("is_gold");
@@ -28,7 +33,7 @@ public class Account {
         account.mod = node.getBoolean("is_mod");
         account.modhash = node.getString("modhash");
         account.username = node.getString("name");
-        
+
         return account;
     }
 

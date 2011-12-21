@@ -13,10 +13,9 @@ import yetanotherx.redditbot.util.transformer.StringTransformer;
 
 /**
  * Simple Map accessor class. For Maps of Maps, it's far easier
- * to call these methods using node syntax (key.key.key) instead
- * of Map.get(Map.get()) and whatnot. Credits to Bukkit for this!
+ * to call these methods using node syntax (key/key/key) instead
+ * of Map.get(Map.get()) and whatnot. 
  * 
- * TODO: Rewrite to eliminate GPL dependency
  * TODO: Debug method
  * 
  * @author bukkit

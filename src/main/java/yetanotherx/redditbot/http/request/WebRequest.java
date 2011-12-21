@@ -3,6 +3,11 @@ package yetanotherx.redditbot.http.request;
 import java.util.HashMap;
 import yetanotherx.redditbot.RedditPlugin;
 
+/**
+ * Implements Request in a usable format
+ * 
+ * @author yetanotherx
+ */
 public class WebRequest extends Request {
 
     public WebRequest(RedditPlugin plugin) {

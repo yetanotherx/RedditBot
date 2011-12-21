@@ -1,6 +1,11 @@
 package yetanotherx.redditbot.exception;
 
-public class UnsetParameterException extends RuntimeException {
+/**
+ * Called when a required parameter is not set.
+ * 
+ * @author yetanotherx
+ */
+public class UnsetParameterException extends RedditException {
 
     private static final long serialVersionUID = 1L;
     

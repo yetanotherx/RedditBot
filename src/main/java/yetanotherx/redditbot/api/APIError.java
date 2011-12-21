@@ -1,7 +1,7 @@
 package yetanotherx.redditbot.api;
 
 /**
- * TODO: Better messages
+ * List of known Reddit error messages.
  * 
  * @author yetanotherx
  */
@@ -75,10 +75,22 @@ public enum APIError {
         this.message = message;
     }
 
+    /**
+     * Returns a more verbose error message
+     * 
+     * @return 
+     */
     public String getMessage() {
         return message;
     }
     
+    /**
+     * Gets the error with the given key. 
+     * If it's not found, return GENERIC rather than null.
+     * 
+     * @param key
+     * @return 
+     */
     public static APIError realValueOf(String key) {
         APIError error = APIError.valueOf(key);
         if( error == null ) {

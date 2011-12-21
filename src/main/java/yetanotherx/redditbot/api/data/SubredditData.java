@@ -1,10 +1,15 @@
-package yetanotherx.redditbot.api.types;
+package yetanotherx.redditbot.api.data;
 
 import java.math.BigDecimal;
 import yetanotherx.redditbot.util.MapNode;
 
-public class Subreddit {
-    
+/**
+ * Stores data about subreddits.
+ * 
+ * @author yetanotherx
+ */
+public class SubredditData {
+
     protected String displayName;
     protected String name;
     protected String title;
@@ -14,9 +19,9 @@ public class Subreddit {
     protected Integer subscribers;
     protected String id;
     protected String description;
-    
-    public static Subreddit newInstance(MapNode node) {
-        Subreddit sr = new Subreddit();
+
+    public static SubredditData newInstance(MapNode node) {
+        SubredditData sr = new SubredditData();
         sr.created = new BigDecimal(node.getString("created_utc")).intValue();
         sr.description = node.getString("description");
         sr.displayName = node.getString("display_name");
@@ -26,7 +31,7 @@ public class Subreddit {
         sr.subscribers = node.getInteger("subscribers");
         sr.title = node.getString("title");
         sr.url = node.getString("url");
-        
+
         return sr;
     }
 
@@ -62,11 +67,11 @@ public class Subreddit {
         this.id = id;
     }
 
-    public String getName() {
+    public String getFullname() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setFullname(String name) {
         this.name = name;
     }
 
@@ -101,5 +106,4 @@ public class Subreddit {
     public void setURL(String url) {
         this.url = url;
     }
-    
 }

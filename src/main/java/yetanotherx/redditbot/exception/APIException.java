@@ -1,6 +1,12 @@
 package yetanotherx.redditbot.exception;
 
+/**
+ * Called when the API throws an error.
+ * 
+ * @author yetanotherx
+ */
 public class APIException extends RedditException {
+
     private static final long serialVersionUID = 1L;
 
     public APIException(String string) {
@@ -9,5 +15,4 @@ public class APIException extends RedditException {
 
     public APIException() {
     }
-    
 }

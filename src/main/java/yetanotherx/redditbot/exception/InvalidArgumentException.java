@@ -1,6 +1,11 @@
 package yetanotherx.redditbot.exception;
 
-public class InvalidArgumentException extends RuntimeException {
+/**
+ * Called when an argument cannot be used in a method.
+ * 
+ * @author yetanotherx
+ */
+public class InvalidArgumentException extends RedditException {
 
     private static final long serialVersionUID = 1L;
     

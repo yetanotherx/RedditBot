@@ -1,29 +1,27 @@
 package yetanotherx.redditbot.http;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.cookie.Cookie;
 import yetanotherx.redditbot.RedditPlugin;
-import yetanotherx.redditbot.exception.NetworkException;
 import yetanotherx.redditbot.http.request.Request;
 import yetanotherx.redditbot.http.response.Response;
 
+/**
+ * Core Transport class. Stores cookies, the request class, and an
+ * abstract method for executing the Request.
+ * 
+ * @author yetanotherx
+ */
 public abstract class Transport {
 
     protected Request request;
     protected RedditPlugin plugin;
+    protected Cookie cookie;
 
     public Transport(RedditPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public abstract Response sendURL() throws NetworkException;
+    public abstract Response sendURL();
 
     public Request getRequest() {
         return request;
@@ -33,39 +31,12 @@ public abstract class Transport {
         this.request = request;
     }
 
-    public static Transport createTransport(RedditPlugin plugin) {
-        TransportType type = plugin.getTransportType();
-
-        switch (type) {
-            case APACHE:
-                return new ApacheTransport(plugin);
-            case JSOUP:
-                return new JSoupTransport(plugin);
-        }
-        
-        return null;
+    public Cookie getCookie() {
+        return cookie;
     }
 
-    public static String parseParameters(Request request) {
-        String url = request.getURL();
-
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        for (String key : request.getParameters().keySet()) {
-            params.add(new BasicNameValuePair(key, request.getParameters().get(key)));
-        }
-
-        if (params.size() > 0) {
-            url += "?" + URLEncodedUtils.format(params, "UTF-8");
-        }
-        
-        return url;
+    public void setCookie(Cookie cookie) {
+        this.cookie = cookie;
     }
-    
-    public static String urlEncode(String string) {
-        try {
-            return URLEncoder.encode(string, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException("UTF8 not found! What is wrong with your system?");
-        }
-    }
+
 }

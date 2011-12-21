@@ -4,6 +4,12 @@ import java.util.Map;
 import org.apache.commons.collections.Transformer;
 import yetanotherx.redditbot.util.MapNode;
 
+/**
+ * Apache Commons collection transformer
+ * Transforms objects to MapNodes.
+ * 
+ * @author yetanotherx
+ */
 public class MapNodeTransformer implements Transformer {
 
     @SuppressWarnings("unchecked")
