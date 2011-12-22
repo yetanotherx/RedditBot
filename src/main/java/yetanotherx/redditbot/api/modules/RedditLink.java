@@ -28,7 +28,7 @@ import yetanotherx.redditbot.util.collections.EasyHashMap;
 public class RedditLink extends APIModule {
 
     protected LinkData link;
-    
+
     protected RedditLink(RedditPlugin plugin, LinkData link) {
         super(plugin);
         this.link = link;
@@ -44,7 +44,7 @@ public class RedditLink extends APIModule {
     public static RedditLink newFromLink(RedditPlugin plugin, LinkData link) {
         return new RedditLink(plugin, link);
     }
-    
+
     /**
      * Creates a new instance for this link id (without t3_ prefix)
      * 
@@ -55,17 +55,17 @@ public class RedditLink extends APIModule {
     public static RedditLink newFromID(RedditPlugin plugin, String id) {
         return new RedditLink(plugin, getLinkFromID(plugin, id));
     }
-    
+
     protected static LinkData getLinkFromID(RedditPlugin plugin, String id) {
         Transport transport = plugin.getTransport();
         Request request = new WebRequest(plugin);
         request.setURL(plugin.getRedditURL() + "/by_id/t3_" + id + ".json");
         transport.setRequest(request);
-        
+
         Response response = transport.sendURL();
         JSONResult json = response.getJSONResult();
-        
-        for( MapNode node : json.getMapNodeList("data/children") ) {
+
+        for (MapNode node : json.getMapNodeList("data/children")) {
             return LinkData.newInstance(node.getMapNode("data"));
         }
         return null;
@@ -78,7 +78,7 @@ public class RedditLink extends APIModule {
     public LinkData getLinkData() {
         return link;
     }
-    
+
     /**
      * Get a list of all the comments. This is not recursive.
      * 
@@ -89,22 +89,30 @@ public class RedditLink extends APIModule {
         Request request = new WebRequest(plugin);
         request.setURL(plugin.getRedditURL() + "/comments/" + this.link.getID() + ".json");
         transport.setRequest(request);
-        
-        Response response = transport.sendURL();
-        JSONResult json = response.getJSONResult();
-        
-        ArrayList<CommentData> data = new ArrayList<CommentData>();
-        for( MapNode node : json.getMapNodeList("1/data/children") ) {
-            try {
+
+        Response response = null;
+        try {
+            response = transport.sendURL();
+            JSONResult json = response.getJSONResult();
+
+            ArrayList<CommentData> data = new ArrayList<CommentData>();
+            for (MapNode node : json.getMapNodeList("1/data/children")) {
+
                 data.add(CommentData.newInstance(node.getMapNode("data")));
+
             }
-            catch( Exception e ) {
-                //TODO: Fails?
+            return data.toArray(new CommentData[data.size()]);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (response != null) {
+                System.out.println(response.getContent());
             }
+            //TODO: Fails?
         }
-        return data.toArray(new CommentData[data.size()]);
+        return null;
+
     }
-    
+
     /**
      * Submits a new link.
      * 
@@ -116,7 +124,7 @@ public class RedditLink extends APIModule {
      * @return 
      */
     public static boolean doSubmit(RedditPlugin plugin, String title, String content, String subreddit, LinkType type) {
-        
+
         Transport transport = plugin.getTransport();
 
         HashMap<String, String> map = new EasyHashMap<String, String>(
@@ -125,13 +133,12 @@ public class RedditLink extends APIModule {
                 "kind", type.toString(),
                 "uh", plugin.getModHash());
 
-        if( type == LinkType.SELF ) {
+        if (type == LinkType.SELF) {
             map.put("text", content);
-        }
-        else {
+        } else {
             map.put("url", content);
         }
-        
+
         Request request = new WebRequest(plugin, map);
         request.setURL(plugin.getRedditURL() + "/api/submit");
         request.setMethod(RequestType.POST);
@@ -143,11 +150,11 @@ public class RedditLink extends APIModule {
         if (error != null) {
             throw new APIException(APIError.realValueOf(error).getMessage());
         }
-        
+
         return true;
-        
+
     }
-    
+
     /**
      * Reply to a link.
      * 
@@ -173,10 +180,10 @@ public class RedditLink extends APIModule {
         if (error != null) {
             throw new APIException(APIError.realValueOf(error).getMessage());
         }
-        
+
         return true;
     }
-    
+
     /**
      * Saves the link for later.
      * 
@@ -200,10 +207,10 @@ public class RedditLink extends APIModule {
         if (error != null) {
             throw new APIException(APIError.realValueOf(error).getMessage());
         }
-        
+
         return true;
     }
-    
+
     /**
      * Unsaves the link.
      * 
@@ -227,10 +234,10 @@ public class RedditLink extends APIModule {
         if (error != null) {
             throw new APIException(APIError.realValueOf(error).getMessage());
         }
-        
+
         return true;
     }
-    
+
     /**
      * Hides the link. Not really useful for an API, but it does
      * mark them as hidden in RedditLink.
@@ -255,10 +262,10 @@ public class RedditLink extends APIModule {
         if (error != null) {
             throw new APIException(APIError.realValueOf(error).getMessage());
         }
-        
+
         return true;
     }
-    
+
     /**
      * Unhides the link.
      * 
@@ -282,10 +289,10 @@ public class RedditLink extends APIModule {
         if (error != null) {
             throw new APIException(APIError.realValueOf(error).getMessage());
         }
-        
+
         return true;
     }
-    
+
     /**
      * Votes on the link.
      * 
@@ -311,8 +318,7 @@ public class RedditLink extends APIModule {
         if (error != null) {
             throw new APIException(APIError.realValueOf(error).getMessage());
         }
-        
+
         return true;
     }
-    
 }
