@@ -81,6 +81,7 @@ public class ApacheTransport extends Transport {
             resp.setContent(CharStreams.toString(new InputStreamReader(response.getEntity().getContent())));
             resp.setHTTPCode(new HTTPCode(response.getStatusLine().getStatusCode()));
             resp.setContentType(response.getEntity().getContentType().getValue());
+            resp.setContentLength(response.getEntity().getContentLength());
             resp.setCookies(client.getCookieStore().getCookies());
             resp.setHeaders(Arrays.asList(response.getAllHeaders()));
 

@@ -63,7 +63,7 @@ public class MapNode {
             }
             return out;
         } else {
-            if (prop.isEmpty()) {
+            if (prop.length() == 0) {
                 return base;
             }
 

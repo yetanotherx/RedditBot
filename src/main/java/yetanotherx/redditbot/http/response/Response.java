@@ -24,6 +24,7 @@ public abstract class Response {
     protected List<Header> headers;
     protected HTTPCode code;
     protected String contentType;
+    protected Long contentLength;
     protected String content;
     protected JSONResult jsonObject;
     protected List<Cookie> cookies;
@@ -84,6 +85,14 @@ public abstract class Response {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public Long getContentLength() {
+        return contentLength;
+    }
+
+    public void setContentLength(Long contentLength) {
+        this.contentLength = contentLength;
     }
 
     public void setContent(String content) {
