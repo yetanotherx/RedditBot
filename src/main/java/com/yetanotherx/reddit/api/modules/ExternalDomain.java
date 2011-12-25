@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.yetanotherx.reddit.RedditPlugin;
 import com.yetanotherx.reddit.api.APIModule;
+import com.yetanotherx.reddit.api.ListType;
 import com.yetanotherx.reddit.api.data.LinkData;
 import com.yetanotherx.reddit.redditbot.http.Transport;
 import com.yetanotherx.reddit.http.request.Request;
@@ -43,10 +44,10 @@ public class ExternalDomain extends APIModule {
      * 
      * @return 
      */
-    public List<LinkData> getUsages() {
+    public List<LinkData> getUsages(ListType type) {
         Transport transport = plugin.getTransport();
         Request request = new WebRequest(plugin);
-        request.setURL(plugin.getRedditURL() + "/domain/" + HTTPUtils.urlEncode(domain) + "/.json");
+        request.setURL(plugin.getRedditURL() + "/domain/" + HTTPUtils.urlEncode(domain) + type.getURL() + "/.json");
         transport.setRequest(request);
         
         Response response = transport.sendURL();
@@ -61,4 +62,7 @@ public class ExternalDomain extends APIModule {
         return links;
     }
     
+    public List<LinkData> getUsages() {
+        return getUsages(ListType.HOT);
+    }
 }
