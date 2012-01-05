@@ -15,7 +15,11 @@ public class IntegerTransformer implements Transformer {
             return null;
         }
         
-        return Integer.parseInt(o.toString());
+        try {
+            return Integer.parseInt(o.toString());
+        } catch( NumberFormatException e ) {
+            return null;
+        }
     }
     
 }
