@@ -69,7 +69,7 @@ public class RedditCore extends APIModule {
         JSONResult json = response.getJSONResult();
         
         if (!json.getStringList("json/errors").isEmpty()) {
-            throw new APIException(json.getStringList("json/errors").get(1));
+            throw new APIException(json.getStringList("json/errors").get(0));
         }
         
         for( Cookie cookie : response.getCookies() ) {
